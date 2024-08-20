@@ -1,11 +1,11 @@
 import React from 'react'
 import Form from "../components/Form"
-function Login() {
+function Register() {
   return (
     <div className='h-screen w-screen flex justify-center items-center absolute'>
-      <Form route="/api/token/" method="login"/>
+      <Form route="/api/user/register/" method="register"/>
     </div>
   )
 }
 
-export default Login
+export default Register

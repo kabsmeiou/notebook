@@ -13,3 +13,14 @@ class Opus(models.Model):
   
   def __str__(self):
     return self.title
+  
+  @property
+  def get_time_and_date(self):
+    # return in [Time, Month Day, Year] format
+    time_and_date = str(self.publication_date.time)
+    + ', '
+    + self.months[self.publication_date.month - 1]
+    + str(self.publication_date.day)
+    + ', '
+    + str(self.publication_date.year)
+    return time_and_date

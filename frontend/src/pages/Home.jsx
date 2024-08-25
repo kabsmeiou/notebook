@@ -28,7 +28,7 @@ function Home() {
   }, []);
   
   return (
-    <div className='h-screen w-screen top-0 left-0 bg-[#FEFAE0] overflow-hidden'>
+    <div className='h-screen w-screen top-0 left-0 bg-[#FEFAE0] overflow-hidden select-none'>
       <Header />
       <div className='flex h-screen'> 
         {/* the image */}
@@ -36,13 +36,13 @@ function Home() {
           <div className='h-[689px] w-[1120px] mt-14 bg-cover'
           style={{ backgroundImage: `url(${monet})` }}>
           </div>
-          <p className='text-lg p-4 ms-32 font-bold'>The Garden of Monet at Argenteuil,  Monet, 1873</p>
+          <p className='text-lg p-4 ms-32 font-[500] roboto-serif'>The Garden of Monet at Argenteuil,  Monet, 1873</p>
         </div>
         {/* container for left side elements (calendar, texts, time) */}
-        <div className='h-max mt-14 w-screen flex flex-col justify-center items-center gap-y-8'>
-          <div className='flex flex-col items-center'>
+        <div className='h-max mt-14 w-screen flex flex-col justify-center items-center gap-y-4'>
+          <div className='flex flex-col items-center roboto-serif font-[50]'>
             {currentTime}
-            <p className='text-3xl'>
+            <p className='text-3xl font-[300]'>
               Good day, Kabs!
             </p>
           </div>
@@ -50,7 +50,7 @@ function Home() {
           <Calendar />
           <div>
             {/* quote */}
-            <p className='w-[320px] text-center'>
+            <p className='w-[390px] text-center roboto-serif'>
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim  veniam"
             </p>
           </div>

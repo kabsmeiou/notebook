@@ -12,9 +12,9 @@ function Header() {
     <div className='h-[89px] w-screen bg-[#FAEDCD] border-b-[1px] border-black'>
       <div className='flex h-full items-center p-8'>
         <div className='w-3/6'>
-          <div className='text-[34px]'>Tales of a Random Human</div>
+          <div className='title text-[34px]'>Tales of a Random Human</div>
         </div>
-        <nav className='flex w-3/6 justify-end gap-x-12'>
+        <nav className='flex w-3/6 justify-end gap-x-8 roboto-serif'>
           <button className='text-[20px] p-2' onClick={() => goToNewPage("")}>Home</button>
           <button className='text-[20px] p-2 rounded-lg bg-[#D4A373]' onClick={() => goToNewPage("notebook")}>Notebook</button>
         </nav>

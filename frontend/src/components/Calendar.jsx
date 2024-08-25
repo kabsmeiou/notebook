@@ -43,34 +43,34 @@ function Calendar() {
 
   return (
     <>
-      <div className='flex flex-col h-max w-max items-center rounded shadow-md bg-[#CCD5AE] px-6 py-4 gap-y-2'>
-        <p className='font-bold text-[26px]'>{months[get_month()]}</p>
+      <div className='flex flex-col h-max w-max items-center rounded shadow-md bg-[#CCD5AE] px-6 py-4 gap-y-2 select-none'>
+        <p className='font-[550] text-[26px] roboto-serif'>{months[get_month()]}</p>
         <div>
-          <ul className='flex gap-x-8'>
+          <ul className='flex gap-x-8 roboto-serif font-[500]'>
             {counts.map((_, x) => (
               <li key={x} className='flex justify-center w-[33px]'>{weekdays[x]}</li>
             ))}
           </ul>
-          <div className="flex gap-y-4 mt-6">
-            <div className="flex flex-wrap w-full max-w-[425px] gap-y-8 gap-x-[32px] font-extralight">
+          <div className="flex gap-y-4 mt-4">
+            <div className="flex flex-wrap w-full max-w-[425px] gap-y-4 gap-x-[32px]">
               {sentinel.map((_, y) => {
                 const max = (lastDateOfMonth + firstDayOfMonth)
                 const value = y % max + 1;
                 // highlight current date
                 if (y === get_date() + firstDayOfMonth - 1) {
-                  return <div key={y} className='flex justify-center w-[33px] font-bold rounded-full bg-[#D4A373]'>{value - firstDayOfMonth}</div>
+                  return <div key={y} className='flex justify-center items-center h-[33px] w-[33px] rounded-full bg-[#D4A373] border-black border-[1px]'>{value - firstDayOfMonth}</div>
                 } else if (y >= firstDayOfMonth && y < max){ 
-                  return <div key={y} className='flex justify-center w-[33px]'>{value - firstDayOfMonth}</div>
+                  return <div key={y} className='flex justify-center items-center h-[33px] w-[33px]'>{value - firstDayOfMonth}</div>
                 } else if (y <= firstDayOfMonth) {  // change opacity for dates not in the current month
-                  return <div key={y} className='flex justify-center w-[33px] opacity-[0.5]'>{(prevLastDayOfMonth - firstDayOfMonth + 2) + y}</div> 
+                  return <div key={y} className='flex justify-center items-center h-[33px] w-[33px] opacity-[0.5]'>{(prevLastDayOfMonth - firstDayOfMonth + 2) + y}</div> 
                 } else {   // fill the calendar with next month's dates
-                  return <div key={y} className='flex justify-center w-[33px] opacity-[0.5]'>{y - (34 - (7 - (lastDayOfMonth + 1)))}</div> 
+                  return <div key={y} className='flex justify-center items-center h-[33px] w-[33px] opacity-[0.5]'>{y - (34 - (7 - (lastDayOfMonth + 1)))}</div> 
                 }
               })}
             </div>
           </div>
         </div>
-        <div className='text-center text-xl font-semibold mt-2'>{currentYear}</div>
+        <div className='text-center text-xl font-semibold mt-2 roboto-serif'>{currentYear}</div>
       </div>
     </>
   )

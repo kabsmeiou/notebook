@@ -3,9 +3,8 @@ import Header from '../components/Header'
 import monet from '../assets/monet.jpg'
 import Calendar from '../components/Calendar'
 
-const today = new Date();
-
 function get_current_time() {
+  const today = new Date();
   var hours = "0" + today.getHours()
   var minutes = "0" + today.getMinutes()
   

@@ -9,7 +9,7 @@ function Header() {
   };
 
   return (
-    <div className='h-[89px] w-screen bg-[#FAEDCD] border-b-[1px] border-black'>
+    <div className='h-[89px] w-screen bg-[#FAEDCD] border-b-[1px] border-black overflow-hidden'>
       <div className='flex h-full items-center p-8'>
         <div className='w-3/6'>
           <div className='title text-[34px]'>Tales of a Random Human</div>

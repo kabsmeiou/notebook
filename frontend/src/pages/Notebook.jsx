@@ -16,25 +16,46 @@ function Notebook() {
   const [notes, setNotes] = useState([]);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
-  const [publicationDate, setPublicationDate] = useState("");
   const [showPaper, setShowPaper] = useState(false);
+  const [readOnly, setReadOnly] = useState(false);
+  const [currentNoteId, setCurrentNoteId] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [entriesPerPage] = useState(5);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const togglePaper = () => {
+    setTitle("")
+    setContent("")
+    setShowPaper(true);
+    setReadOnly(false);
+  };
 
   // get all of the entries and store to use state notes
   useEffect(() => {
     getNotes();
   }, []);
 
+  const getCurrentEntries = () => {
+    const startIndex = (currentPage - 1) * entriesPerPage;
+    const endIndex = startIndex + entriesPerPage;
+    return notes.slice(startIndex, endIndex);
+  };                                                                            
+
+  // get the list of entries
   const getNotes = () => {
     api
       .get("/api/opus/")
       .then((req) => req.data)
       .then((data) => {
         setNotes(data);
+        setTotalPages(Math.ceil(data.length / entriesPerPage));
         console.log(data);
       })
       .catch((err) => alert(err));
   };
 
+  // entry deletion
   const deleteEntry = (id) => {
     api
       .delete(`/api/opus/delete/${id}/`)
@@ -49,6 +70,7 @@ function Notebook() {
       .catch((error) => alert(error));
   };
 
+  // creating entries
   const createEntry = (e) => {
     e.preventDefault();
     api
@@ -58,11 +80,32 @@ function Notebook() {
           alert("Entry Added.");
           setTitle(""), setContent("");
           getNotes();
+          setShowPaper(false);
           return;
         }
         alert("Failed to add entry.");
       })
       .catch((error) => alert(error));
+  };
+
+  // deleting entries
+  const updateEntry = (id) => {
+    console.log({content, title})
+    api
+      .put(`api/opus/update/${id}/`, { content, title })
+      .then((req) => {
+        if (req.status === 200) {
+          setReadOnly(true); // set read only to true after update
+          alert("Entry Updated.")
+          getNotes();
+          return;
+        }
+        alert("Failed to update entry.")
+      })
+      .catch((error) => {
+        console.error(error.response.data)
+        alert(error)
+      });
   };
 
   return (
@@ -77,10 +120,44 @@ function Notebook() {
               <button className="opacity-[0.5]">Drafts</button>
             </div>
             <div className="relative flex flex-col gap-y-8 w-full ms-14">
-              {notes.map((note) => <Entry note={note} onDelete={deleteEntry} key={note.id}/>)}
+              {/* list entries */}
+              {getCurrentEntries().map((note) => (
+                <Entry
+                  note={note}
+                  onDelete={deleteEntry}
+                  setTitle={setTitle}
+                  setContent={setContent}
+                  setShowPaper={setShowPaper}
+                  setReadOnly={setReadOnly}
+                  setCurrentNoteId={setCurrentNoteId}
+                  readOnly={readOnly}
+                  key={note.id}
+                />
+              ))}
+              <div className="flex gap-x-4">
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className={`roboto-serif ${currentPage === 1 ? "opacity-[0.5]" : "opacity-1"}`}
+                >
+                  Previous
+                </button>
+                <div className="roboto-regular">
+                  <span>Page {currentPage} of {totalPages}</span>
+                </div> 
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className={`roboto-serif ${currentPage === totalPages ? "opacity-[0.5]" : "opacity-1"}`}
+                >
+                  Next
+                </button>
+              </div>
+
             </div>
           </div>
         </div>
+        {/* show the paper if write/entry clicked */}
         {showPaper && (
           <Paper
             title={title}
@@ -88,7 +165,11 @@ function Notebook() {
             setTitle={setTitle}
             setContent={setContent}
             setShowPaper={setShowPaper}
-            onSubmit={createEntry}
+            createEntry={createEntry}
+            updateEntry={updateEntry}
+            setReadOnly={setReadOnly}
+            readOnly={readOnly}
+            currentNoteId={currentNoteId}
           />
         )}
         <div className="flex items-center h-full w-full p-8 overflow-hidden">
@@ -101,11 +182,13 @@ function Notebook() {
               className="col-start-8 col-span-5 row-span-7 bg-cover bg-center "
               style={{ backgroundImage: `url(${parasol})` }}
             ></div>
-            <div className="flex row-span-2 col-span-5 items-center">
-              Name here
+            <div className="flex row-span-2 col-span-5">
+              <div className="flex flex-col text-5xl m-2 roboto-serif">
+                Cryann Von Claifleur
+              </div>
             </div>
-            <div className="flex col-start-6 row-span-2 col-span-2 items-center justify-center">
-              <button type="button" onClick={() => setShowPaper(true)}>
+            <div className="flex col-start-6 row-span-2 col-span-2 items-center justify-center roboto-serif">
+              <button type="button" onClick={togglePaper} className="py-4 px-6 rounded-full bg-[#D4A373]">
                 Write
               </button>
             </div>

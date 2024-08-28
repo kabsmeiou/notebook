@@ -11,7 +11,7 @@ class OpusListCreate(generics.ListCreateAPIView):
 
   def get_queryset(self):
     user = self.request.user
-    return Opus.objects.filter(author=user)
+    return Opus.objects.filter(author=user).order_by('-publication_date')
   
   def perform_create(self, serializer):
     if serializer.is_valid():
@@ -22,12 +22,29 @@ class OpusListCreate(generics.ListCreateAPIView):
 
 class OpusDelete(generics.DestroyAPIView):
   queryset = Opus.objects.all()
-  serializer_class = UserSerializer
+  serializer_class = OpusSerializer
   permission_classes = [IsAuthenticated]
 
   def get_queryset(self):
     user = self.request.user
     return Opus.objects.filter(author=user)
+  
+
+class OpusUpdate(generics.UpdateAPIView):
+  queryset = Opus.objects.all()
+  serializer_class = OpusSerializer
+  permission_classes = [IsAuthenticated]
+
+  def get_queryset(self):
+    user = self.request.user
+    return Opus.objects.filter(author=user)
+  
+  def perform_update(self, serializer):
+    if serializer.is_valid():
+        serializer.save(author=self.request.user)
+    else:
+        print(serializer.errors)
+
 
 
 class CreateUserView(generics.CreateAPIView):

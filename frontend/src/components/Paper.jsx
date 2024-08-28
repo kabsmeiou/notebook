@@ -1,13 +1,28 @@
-import React from 'react'
+import React, {useState} from 'react'
 
-const Paper = ({ title, content, setTitle, setContent, setShowPaper, onSubmit}) => {
+const Paper = ({ title, content, setTitle, setContent, setShowPaper, createEntry, updateEntry, readOnly, setReadOnly, currentNoteId}) => {
+  const [isEdit, setIsEdit] = useState(false);
+
+  const toggleEdit = () => {
+    setReadOnly(false);
+    setIsEdit(true);
+  };
+
   return (
     <div className="flex items-center h-full w-max ms-4">
       <div className="w-[520px] h-[700px] mb-36 shadow-md bg-[#FAEDCD] p-4 rounded-lg">
-        <div className="flex w-full justify-end">
+        <div className="flex w-full justify-end gap-x-4">
+          <button type="button" onClick={toggleEdit} className="">Edit</button>
           <button type="button" onClick={() => setShowPaper(false)} className="">Close</button>
         </div>
-        <form onSubmit={onSubmit} className="flex flex-col gap-y-4">
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          if (isEdit) {
+            updateEntry(currentNoteId);
+          } else {
+            createEntry(e);
+          }
+        }} className="flex flex-col gap-y-4">
           <div className='flex flex-col'>
             <label htmlFor="title">Title</label>
             <input
@@ -18,6 +33,7 @@ const Paper = ({ title, content, setTitle, setContent, setShowPaper, onSubmit}) 
               required
               onChange={(e) => setTitle(e.target.value)}
               value={title}
+              disabled={readOnly}
             />
           </div>
           <div className='flex flex-col'>
@@ -30,9 +46,12 @@ const Paper = ({ title, content, setTitle, setContent, setShowPaper, onSubmit}) 
               required
               onChange={(e) => setContent(e.target.value)}
               value={content}
+              disabled={readOnly}
             ></textarea>
           </div>
-          <button type="submit" value="Submit">Submit</button>
+          {!readOnly && (
+            <button type="submit" value="Submit">Submit</button> // Only show submit button if not read-only
+          )}
         </form>
       </div>
     </div>

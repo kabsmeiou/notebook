@@ -3,5 +3,6 @@ from . import views
 
 urlpatterns = [
   path("opus/", views.OpusListCreate.as_view(), name="opus-list"),
-  path("opus/delete/<int:pk>/", views.OpusDelete.as_view(), name="delete-opus")
+  path("opus/delete/<int:pk>/", views.OpusDelete.as_view(), name="delete-opus"),
+  path("opus/update/<int:pk>/", views.OpusUpdate.as_view(), name="update-opus")
 ]

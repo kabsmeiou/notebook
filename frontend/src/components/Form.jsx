@@ -20,8 +20,8 @@ function Form({route, method}) {
       if (isLogin) {
         localStorage.setItem(ACCESS_TOKEN, req.data.access);
         localStorage.setItem(REFRESH_TOKEN, req.data.refresh);
-        // Navigate to home
-        navigate("/"); 
+        // Navigate to notebook
+        navigate("/notebook"); 
       } else {
         // else navigate to login (no tokens)
         navigate("/login")

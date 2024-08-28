@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.utils import timezone
 class Opus(models.Model):
   title = models.CharField(max_length=100)
   content = models.TextField()
@@ -17,10 +17,6 @@ class Opus(models.Model):
   @property
   def get_time_and_date(self):
     # return in [Time, Month Day, Year] format
-    time_and_date = str(self.publication_date.time)
-    + ', '
-    + self.months[self.publication_date.month - 1]
-    + str(self.publication_date.day)
-    + ', '
-    + str(self.publication_date.year)
+    local_time = timezone.localtime(self.publication_date)  
+    time_and_date = f"{local_time.strftime('%I:%M %p')}, {self.publication_date.strftime('%B')} {self.publication_date.day}, {self.publication_date.year}"
     return time_and_date

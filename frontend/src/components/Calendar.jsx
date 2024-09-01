@@ -43,7 +43,7 @@ function Calendar() {
 
   return (
     <>
-      <div className='flex flex-col h-max w-max items-center rounded shadow-md bg-[#CCD5AE] px-6 py-4 gap-y-2 select-none'>
+      <div className='flex flex-col h-max w-max items-center rounded shadow-md bg-[#FAEDCD] px-6 py-4 gap-y-2 select-none'>
         <p className='font-[550] text-[26px] roboto-serif'>{months[get_month()]}</p>
         <div>
           <ul className='flex gap-x-8 roboto-serif font-[500]'>

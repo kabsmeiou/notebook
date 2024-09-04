@@ -13,13 +13,19 @@ import house from "../assets/peasant.jpg";
 import plumtrees from "../assets/plumtrees.jpg";
 
 function Notebook() {
+  // notes data
   const [notes, setNotes] = useState([]);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
+
+  // for viewing the notes/paper
   const [showPaper, setShowPaper] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
+
+  // for saving a new note
   const [currentNoteId, setCurrentNoteId] = useState(null);
 
+  // for page navigation
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
@@ -49,8 +55,9 @@ function Notebook() {
       .then((req) => req.data)
       .then((data) => {
         setNotes(data);
-        setTotalPages(Math.ceil(data.length / entriesPerPage));
-        console.log(data);
+        const current = Math.ceil(data.length / entriesPerPage);
+        setTotalPages(current);
+        setCurrentPage((prev) => Math.min(current, prev));
       })
       .catch((err) => alert(err));
   };
@@ -62,6 +69,7 @@ function Notebook() {
       .then((req) => {
         if (req.status === 204) {
           alert("Note deleted!");
+          setShowPaper(false);
           getNotes();
           return;
         }
@@ -96,7 +104,7 @@ function Notebook() {
       .then((req) => {
         if (req.status === 200) {
           setReadOnly(true); // set read only to true after update
-          alert("Entry Updated.")
+          alert("Entry Updated.");
           getNotes();
           return;
         }
@@ -167,6 +175,7 @@ function Notebook() {
             setShowPaper={setShowPaper}
             createEntry={createEntry}
             updateEntry={updateEntry}
+            deleteEntry={deleteEntry}
             setReadOnly={setReadOnly}
             readOnly={readOnly}
             currentNoteId={currentNoteId}

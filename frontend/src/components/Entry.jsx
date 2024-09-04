@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Entry({note, onDelete, setTitle, setContent, setReadOnly, setCurrentNoteId, setShowPaper}) {
+function Entry({note, setTitle, setContent, setReadOnly, setCurrentNoteId, setShowPaper}) {
   const togglePaper = () => {
     setTitle(note.title);
     setContent(note.content);

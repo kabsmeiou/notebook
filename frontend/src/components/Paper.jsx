@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-const Paper = ({ title, content, setTitle, setContent, setShowPaper, createEntry, updateEntry, readOnly, setReadOnly, currentNoteId}) => {
+const Paper = ({ title, content, setTitle, setContent, setShowPaper, createEntry, updateEntry, deleteEntry, readOnly, setReadOnly, currentNoteId}) => {
   const [isEdit, setIsEdit] = useState(false);
 
   const toggleEdit = () => {
@@ -13,9 +13,10 @@ const Paper = ({ title, content, setTitle, setContent, setShowPaper, createEntry
       <div className="w-[520px] h-[700px] mb-36 shadow-md bg-[#FAEDCD] p-4 rounded-lg">
         <div className="flex w-full justify-end gap-x-4">
           <button type="button" onClick={toggleEdit} className="">Edit</button>
+          <button type="submit" onClick={() => deleteEntry(currentNoteId)} className="">Delete</button>
           <button type="button" onClick={() => setShowPaper(false)} className="">Close</button>
         </div>
-        <form onSubmit={(e) => {
+        <form onSubmit={(e) => {  
           e.preventDefault();
           if (isEdit) {
             updateEntry(currentNoteId);

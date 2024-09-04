@@ -5,6 +5,7 @@ from .serializers import UserSerializer, OpusSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Opus
 
+
 class OpusListCreate(generics.ListCreateAPIView):
   serializer_class = OpusSerializer
   permission_classes = [IsAuthenticated]
@@ -20,6 +21,7 @@ class OpusListCreate(generics.ListCreateAPIView):
       print(serializer.errors)
 
 
+
 class OpusDelete(generics.DestroyAPIView):
   queryset = Opus.objects.all()
   serializer_class = OpusSerializer
@@ -29,6 +31,7 @@ class OpusDelete(generics.DestroyAPIView):
     user = self.request.user
     return Opus.objects.filter(author=user)
   
+
 
 class OpusUpdate(generics.UpdateAPIView):
   queryset = Opus.objects.all()
@@ -44,7 +47,6 @@ class OpusUpdate(generics.UpdateAPIView):
         serializer.save(author=self.request.user)
     else:
         print(serializer.errors)
-
 
 
 class CreateUserView(generics.CreateAPIView):

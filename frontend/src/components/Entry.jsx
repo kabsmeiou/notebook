@@ -1,12 +1,13 @@
 import React from 'react'
 
-function Entry({note, setTitle, setContent, setReadOnly, setCurrentNoteId, setShowPaper}) {
+function Entry({note, setTitle, setContent, setReadOnly, setCurrentNoteId, setShowPaper, setIsDraft}) {
   const togglePaper = () => {
     setTitle(note.title);
     setContent(note.content);
     setShowPaper(true);
     setReadOnly(true);
     setCurrentNoteId(note.id);
+    setIsDraft(note.is_draft)
   };
 
   return (

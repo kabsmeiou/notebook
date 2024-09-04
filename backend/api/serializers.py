@@ -15,6 +15,6 @@ class UserSerializer(serializers.ModelSerializer):
 class OpusSerializer(serializers.ModelSerializer):
   class Meta:
     model = Opus
-    fields = ["id", "title", "content", "get_time_and_date", "author"]
+    fields = ["id", "title", "content", "get_time_and_date", "author", "is_draft"]
     extra_kwargs = {"author": {"read_only": True}}
 

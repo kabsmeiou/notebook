@@ -13,11 +13,15 @@ import house from "../assets/peasant.jpg";
 import plumtrees from "../assets/plumtrees.jpg";
 
 function Notebook() {
+  //current notes (drafts/actual entries)
+  const [showDrafts, setShowDrafts] = useState(false);
+
   // notes data
   const [notes, setNotes] = useState([]);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
-
+  const [is_draft, setIsDraft] = useState(false);
+  
   // for viewing the notes/paper
   const [showPaper, setShowPaper] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
@@ -37,10 +41,10 @@ function Notebook() {
     setReadOnly(false);
   };
 
-  // get all of the entries and store to use state notes
+  // get entries and store to use state notes
   useEffect(() => {
     getNotes();
-  }, []);
+  }, [showDrafts]);
 
   const getCurrentEntries = () => {
     const startIndex = (currentPage - 1) * entriesPerPage;
@@ -50,14 +54,19 @@ function Notebook() {
 
   // get the list of entries
   const getNotes = () => {
+    var path = "/api/opus/";
+    if (showDrafts) {
+      path = "/api/opus/drafts/"
+    }
     api
-      .get("/api/opus/")
+      .get(path)
       .then((req) => req.data)
       .then((data) => {
         setNotes(data);
-        const current = Math.ceil(data.length / entriesPerPage);
-        setTotalPages(current);
-        setCurrentPage((prev) => Math.min(current, prev));
+        console.log(data)
+        const newTotalPages = Math.ceil(data.length / entriesPerPage);
+        setTotalPages(newTotalPages);
+        setCurrentPage((prev) => Math.max(Math.min(newTotalPages, prev), 1));
       })
       .catch((err) => alert(err));
   };
@@ -82,7 +91,7 @@ function Notebook() {
   const createEntry = (e) => {
     e.preventDefault();
     api
-      .post("api/opus/", { content, title })
+      .post("api/opus/", { content, title, is_draft })
       .then((req) => {
         if (req.status === 201) {
           alert("Entry Added.");
@@ -100,7 +109,7 @@ function Notebook() {
   const updateEntry = (id) => {
     console.log({content, title})
     api
-      .put(`api/opus/update/${id}/`, { content, title })
+      .put(`api/opus/update/${id}/`, { content, title, is_draft })
       .then((req) => {
         if (req.status === 200) {
           setReadOnly(true); // set read only to true after update
@@ -116,6 +125,11 @@ function Notebook() {
       });
   };
 
+  const switchPages = (value) => {
+    setShowDrafts(value);
+    getNotes();
+  }
+
   return (
     <div className="h-screen w-screen top-0 left-0 bg-[#FEFAE0] overflow-hidden select-none">
       <Header />
@@ -123,9 +137,9 @@ function Notebook() {
         <div className="flex w-2/5 roboto-serif">
           <div className="flex flex-col items-start gap-y-8 w-4/5 mt-28 ms-12">
             <div className="flex gap-4 text-[24px]">
-              <button className="">Entries</button>
+              <button className={showDrafts ? "opacity-[0.5]" : ""} onClick={() => switchPages(false)}>Entries</button>
               <div className="w-[1px] h-[36px] bg-black"></div>
-              <button className="opacity-[0.5]">Drafts</button>
+              <button className={!showDrafts ? "opacity-[0.5]" : ""} onClick={() => switchPages(true)}>Drafts</button>
             </div>
             <div className="relative flex flex-col gap-y-8 w-full ms-14">
               {/* list entries */}
@@ -139,13 +153,14 @@ function Notebook() {
                   setReadOnly={setReadOnly}
                   setCurrentNoteId={setCurrentNoteId}
                   readOnly={readOnly}
+                  setIsDraft={setIsDraft}
                   key={note.id}
                 />
               ))}
               <div className="flex gap-x-4">
                 <button
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
+                  disabled={currentPage <=1}
                   className={`roboto-serif ${currentPage === 1 ? "opacity-[0.5]" : "opacity-1"}`}
                 >
                   Previous
@@ -161,7 +176,6 @@ function Notebook() {
                   Next
                 </button>
               </div>
-
             </div>
           </div>
         </div>
@@ -177,6 +191,8 @@ function Notebook() {
             updateEntry={updateEntry}
             deleteEntry={deleteEntry}
             setReadOnly={setReadOnly}
+            setIsDraft={setIsDraft}
+            isDraft={is_draft}
             readOnly={readOnly}
             currentNoteId={currentNoteId}
           />

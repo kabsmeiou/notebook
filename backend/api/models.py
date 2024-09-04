@@ -7,6 +7,7 @@ class Opus(models.Model):
   content = models.TextField()
   publication_date = models.DateTimeField("date published", auto_now_add=True)
   author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="works")
+  is_draft = models.BooleanField(default=False)
 
   # declare month names to access with publication date that returns the index(number of the month)
   months = ["January", "February", "March", "April", "May", "June", 

@@ -12,8 +12,13 @@ const Paper = ({ title, content, setTitle, setContent, setShowPaper, createEntry
     <div className="flex items-center h-full w-max ms-4">
       <div className="w-[520px] h-[700px] mb-36 shadow-md bg-[#FAEDCD] p-4 rounded-lg">
         <div className="flex w-full justify-end gap-x-4">
-          <button type="button" onClick={toggleEdit} className="">Edit</button>
-          <button type="submit" onClick={() => deleteEntry(currentNoteId)} className="">Delete</button>
+          {readOnly && (
+            // Only show delete button if read-only
+            <>
+              <button type="button" onClick={toggleEdit} className="">Edit</button>
+              <button type="button" onClick={() => deleteEntry(currentNoteId)} className="">Delete</button> 
+            </>
+          )}
           <button type="button" onClick={() => setShowPaper(false)} className="">Close</button>
         </div>
         <form onSubmit={(e) => {  

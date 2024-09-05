@@ -141,6 +141,11 @@ function Notebook() {
               <div className="w-[1px] h-[36px] bg-black"></div>
               <button className={!showDrafts ? "opacity-[0.5]" : ""} onClick={() => switchPages(true)}>Drafts</button>
             </div>
+            {notes.length <= 0 &&
+              <div className="relative flex h-full gap-y-8 w-full ms-14">No notes found.</div>
+            }
+            {notes.length >=1 &&
+            <>
             <div className="relative flex flex-col gap-y-8 w-full ms-14">
               {/* list entries */}
               {getCurrentEntries().map((note) => (
@@ -177,6 +182,8 @@ function Notebook() {
                 </button>
               </div>
             </div>
+            </>
+            }
           </div>
         </div>
         {/* show the paper if write/entry clicked */}

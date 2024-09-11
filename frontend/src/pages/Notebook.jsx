@@ -11,11 +11,12 @@ import parasol from "../assets/parasol.jpg";
 import bridge from "../assets/bridge.jpg";
 import house from "../assets/peasant.jpg";
 import plumtrees from "../assets/plumtrees.jpg";
+import LoadingIndicator from "../components/LoadingIndicator";
 
 function Notebook() {
   //current notes (drafts/actual entries)
   const [showDrafts, setShowDrafts] = useState(false);
-
+  const [loading, setIsLoading] = useState(false);
   // notes data
   const [notes, setNotes] = useState([]);
   const [content, setContent] = useState("");
@@ -41,23 +42,24 @@ function Notebook() {
     setReadOnly(false);
   };
 
-  // get entries and store to use state notes
-  useEffect(() => {
-    getNotes();
-  }, [showDrafts]);
-
   const getCurrentEntries = () => {
     const startIndex = (currentPage - 1) * entriesPerPage;
     const endIndex = startIndex + entriesPerPage;
     return notes.slice(startIndex, endIndex);
-  };                                                                            
+  };           
+  
+  useEffect(() => {
+    getNotes();
+  }, [showDrafts]);
 
   // get the list of entries
   const getNotes = () => {
+    setIsLoading(true);
     var path = "/api/opus/";
     if (showDrafts) {
-      path = "/api/opus/drafts/"
+      path = "/api/opus/drafts/";
     }
+    console.log(path)
     api
       .get(path)
       .then((req) => req.data)
@@ -67,8 +69,12 @@ function Notebook() {
         const newTotalPages = Math.ceil(data.length / entriesPerPage);
         setTotalPages(newTotalPages);
         setCurrentPage((prev) => Math.max(Math.min(newTotalPages, prev), 1));
+        setIsLoading(false);
       })
-      .catch((err) => alert(err));
+      .catch((err) => {
+        alert(err);
+        setIsLoading(false);
+      });
   };
 
   // entry deletion
@@ -117,7 +123,7 @@ function Notebook() {
           getNotes();
           return;
         }
-        alert("Failed to update entry.")
+        alert("Failed to update entry.");
       })
       .catch((error) => {
         console.error(error.response.data)
@@ -127,7 +133,6 @@ function Notebook() {
 
   const switchPages = (value) => {
     setShowDrafts(value);
-    getNotes();
   }
 
   return (
@@ -141,10 +146,13 @@ function Notebook() {
               <div className="w-[1px] h-[36px] bg-black"></div>
               <button className={!showDrafts ? "opacity-[0.5]" : ""} onClick={() => switchPages(true)}>Drafts</button>
             </div>
-            {notes.length <= 0 &&
+            {notes.length <= 0 && !loading &&
               <div className="relative flex h-full gap-y-8 w-full ms-14">No notes found.</div>
             }
-            {notes.length >=1 &&
+            {loading && 
+              <LoadingIndicator />
+            }
+            {notes.length >= 1 && !loading &&
             <>
             <div className="relative flex flex-col gap-y-8 w-full ms-14">
               {/* list entries */}

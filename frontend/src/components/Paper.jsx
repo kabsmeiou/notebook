@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import LoadingIndicator from "./LoadingIndicator";
 
 const Paper = ({
   title,
@@ -16,7 +17,7 @@ const Paper = ({
   isDraft,
 }) => {
   const [isEdit, setIsEdit] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const toggleEdit = () => {
     setReadOnly(false);
     setIsEdit(true);
@@ -72,6 +73,7 @@ const Paper = ({
             if (isEdit) {
               updateEntry(currentNoteId);
             } else {
+              setLoading(true);
               createEntry(e);
             }
           }}
@@ -103,6 +105,7 @@ const Paper = ({
               disabled={readOnly}
             ></textarea>
           </div>
+          {loading && <LoadingIndicator />}
           {!readOnly && (
             <button type="submit" value="Submit">
               Submit
